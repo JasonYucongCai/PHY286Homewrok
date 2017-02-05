@@ -1,9 +1,11 @@
 function[]=HW01_Problem_06(n,firstn)
-%the first argument as the integer that were to be valued, the second
-%argument as the returns the determinted number of of primes. For example,
-%HW01_Problem_06(256,2)
-%first value as the input value and second value as to show the number of
-%the first prime numbers.
+%The function that returns the first n prime numbers,for an integer input 
+%n. 
+%The program accept two arguments.
+%Type the first argument as the integer that were to be valued, the second 
+%argument as the first number of prime factors that were to be shown. 
+%For example:HW01_Problem_06(256,2).
+%The input argument must be integers.
 %Yuocng Cai
 %-------------------------------------------------------------------------
 if nargin ~=2 %nargin -- new concept! see help nargin
@@ -11,17 +13,18 @@ if nargin ~=2 %nargin -- new concept! see help nargin
     %error('Need exactly two inputs. See help');
   return;
 end
+%Input comfirm, Structure comfirm
 %-------------------------------------------------------------------------
 if n<0
     n=(-n);
 end
+%Input comfirm, legal adjusting.
+%-------------------------------------------------------------------------
 
 A=factor(n);
 N=size(A);
 N=N(1,2);
 %N is the total number of sum of powers of the primes.(How many numbers)
-%fprintf('\nthe total number of numbers is %i\n\n',N);
-
 bp=1;%the position to store the number.
 co=0;%stand for count.
 
@@ -70,16 +73,18 @@ else
 end
 
 fprintf('\nThe first %i prime factor(s) is(are):\n',finaln);
+
 for i=1:1:finaln
     fprintf('the prime %i with power %i\n', bprime(1,i),nup(1,i))
 end
 
-    %print out
+%print out
 %-------------------------------------------------------------------------
 
 
 if size(A)==1
-fprintf('\n%i is a prime number.\n',n);
+    fprintf('\n%i is a prime number.\n',n);
 else
     fprintf('\n%i is not a prime number.\n',n);
 end
+%-------------------------------------------------------------------------
