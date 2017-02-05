@@ -1,5 +1,9 @@
 function[]=HW01_Problem_02(text,n)
-% you must enter the text with quotation mark, 
+%The function takes two input arguments, the first input as a string and 
+%the second an integer. The function must print the string on a single 
+%line, as many times as the integer input.
+%
+%You must enter the text with quotation mark, 
 %for example HW01_Problem_01('hellow world',5)
 %the text will be printed in one line
 %Yuocng Cai
