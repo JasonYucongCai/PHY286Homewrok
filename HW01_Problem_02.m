@@ -14,8 +14,10 @@ if nargin ~=2 %nargin -- new concept! see help nargin
     %error('Need exactly two inputs. See help');
   return;
 end
+%Input comfirm, Structure comfirm
 %-------------------------------------------------------------------------
 
 for i=1:1:n
     fprintf('%s',text);
 end
+%-------------------------------------------------------------------------
