@@ -1,25 +1,30 @@
-function[]=HW01_Problem_01(text,n)
-% The function takes two input arguments, the first input as a string 
-% and the second an integer. The function should print the string on 
-% separate lines, as many times as indicated by the second number input.
+function [str_output] = HW01_Problem_01(str_input, n)
+%function [str_output] = HW01_Problem_01(str_input, n)
 %
-% You must enter the text with quotation mark, 
-% for example HW01_Problem_01('hellow world',5)
-% the text will be printed in separated lines.
-% Yucong Cai
+%This function will display a string input on a different line 'n' times
+%
+%Input: str_input: the string value input 
+%Input: n: the number of times str_input will be displayed
+%
+%Output: str_output: the input to be displayed on 'n' lines
 
-%-------------------------------------------------------------------------
-if nargin ~=2 %nargin -- new concept! see help nargin
-  disp('Need exactly two inputs. See help');
-    %error('Need exactly two inputs. See help');
-  return;
-end
-%Input comfirm, Structure comfirm
-%-------------------------------------------------------------------------
+%--------------------error check------------------------------
 
-
-for i=1:1:n
-    fprintf('%s\n',text);
+if nargin ~= 2
+      error('This function requires two arguments. Please use a string as the first input and an integer as the second!');
 end
 
-%-------------------------------------------------------------------------
+if n <= 0
+    error('This function should print at least one string.');
+end
+
+%--------------------calculate--------------------------------
+
+str_output = str_input; % initialize
+
+  for i = 1:n-1
+       str_output = [str_output; str_input]; % create matrix of inputs
+  end 
+     
+
+  

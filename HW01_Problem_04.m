@@ -1,25 +1,30 @@
-function[]=HW01_Problem_04(n)
-% The function accepts a single integer (n) as input and returns the nth 
-% Fibonacci number using the closed form expression (called "Binet's 
-% formula") in Wikipedia's page. Make the function print the %error
-% between the closed-form computed value and the "true" nth Fibonacci 
-% number in the series.
+function [nth_term] = HW01_Problem_04(n)
+%function [nth_term] = HW01_Problem_04(n)
 %
-% Using the modern definition include the initial integer 0.
-% The input must be itegers.
-% the program will return the n't Fibonacci number.
-%Yuocng Cai
+%This function computes a value of the closed form of the fibonacci
+%sequence and compares it to the value of the regular fibonacci sequence
+%
+%Input: n: the term number of the fibonacci sequence desired
+%
+%Output: nth_term: the value of term n
+%
+%NOTE: the output displays better with a semicolon at the end of the
+%command
 
-%-------------------------------------------------------------------------
-if nargin ~=1 %nargin -- new concept! see help nargin
-  disp('Need exactly one inputs. See help');
-    %error('Need exactly two inputs. See help');
-  return;
+%--------------------error check------------------------------
+
+if nargin ~= 1
+      error('This function requires one argument.');
 end
-%Input comfirm, Structure comfirm
-%-------------------------------------------------------------------------
 
-x=1/sqrt(5)*(   ((1+sqrt(5))/2)^n - ((1-sqrt(5))/2)^n  );
-format short;
-fprintf('the %i Fibonacci number is  %.f\n',n,x);
-%-------------------------------------------------------------------------
+%--------------------calculate--------------------------------
+
+nth_term = ((1+sqrt(5))^n - (1-sqrt(5))^n) / (2^n * sqrt(5)); % calculates the closed form of the fibonacci sequence
+percent_error = abs((HW01_Problem_03(n) - nth_term) / HW01_Problem_03(n) * 100); % percent error
+
+%--------------------display results------------------------------
+
+disp(' ');
+fprintf('The binet term is: %10.2f\n', nth_term);
+disp(' ');
+fprintf('The percent error between the closed form and the regular sequence is: %10.2f\n', percent_error);

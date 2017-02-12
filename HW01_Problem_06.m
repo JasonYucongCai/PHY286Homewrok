@@ -1,90 +1,46 @@
-function[]=HW01_Problem_06(n,firstn)
-%The function that returns the first n prime numbers,for an integer input 
-%n. 
-%The program accept two arguments.
-%Type the first argument as the integer that were to be valued, the second 
-%argument as the first number of prime factors that were to be shown. 
-%For example:HW01_Problem_06(256,2).
-%The input argument must be integers.
-%Yuocng Cai
-%-------------------------------------------------------------------------
-if nargin ~=2 %nargin -- new concept! see help nargin
-  disp('Need exactly two inputs. See help');
-    %error('Need exactly two inputs. See help');
-  return;
+function [output] = HW01_Problem_06(n)
+%function [output] = HW01_Problem_06(n)
+%
+%This function lists the first 'n' prime numbers
+%
+%Input: n: determines how many primes to print
+%
+%Output: output: will display the first 'n' prime numbers
+
+%--------------------error check------------------------------
+
+if nargin ~= 1
+      error('This function requires one argument.');
 end
-%Input comfirm, Structure comfirm
-%-------------------------------------------------------------------------
-if n<0
-    n=(-n);
+
+if n <= 0
+    error('This function should print at least one number.');
 end
-%Input comfirm, legal adjusting.
-%-------------------------------------------------------------------------
 
-A=factor(n);
-N=size(A);
-N=N(1,2);
-%N is the total number of sum of powers of the primes.(How many numbers)
-bp=1;%the position to store the number.
-co=0;%stand for count.
+%--------------------set up-----------------------------------
 
-%set up.
-%------------------------------------------------------------------------
+potential_prime = 3; %starts at 3 since since output starts at 2 (first prime) and thus for any n > 1 will thus start at 3
+counter = 2; %will keep track of how many primes have been displayed, starts at 2 since for n > 1 two values will be added to output initially
+output = 2; % starts at 2 since 2 is the first prime
 
-bprime(1,bp)=A(1,1);% set up the initial 
-nup(1,bp)=0;
+%--------------------calculate--------------------------------
 
-for i=1:1:(N-1)
-  co=co+1;%count the power of prime
-   if  A(1,i)~=A(i+1)
-
-        nup(1,bp)=co;% the power of prime;
-        bp=bp+1;
-        bprime(1,bp)=A(i+1);
-        co=0;
-    end
+while counter <= n
+    
+    is_prime = true; %assume that the number is prime until proven otherwise
    
-end
-%find the list of all prime and (bp-1)'s power of the prime
-%-------------------------------------------------------------------------
-
-
-switch bp
-    case 1
-        nup(1,bp)=co+1;
-   % case 2
-    %    nup(1,2)=N-nup(1,1);
-        
-    otherwise
-    nup(1,bp)=N;
-    for i=1:1:(bp-1)
-        nup(1,bp)=nup(1,bp)-nup(1,i);
+    for i = 2:potential_prime - 1 %check to see if it's prime
+    if rem(potential_prime,i) == 0 %it is now proven that the number is not prime
+        is_prime = false;
     end
-
+    end
+    
+    if is_prime == true
+    output = [output; potential_prime]; %potential_prime is in fact a prime number
+    counter = counter + 1;
+    end
+    
+    potential_prime = potential_prime + 1; %increment the number so as to continue to check higher numbers until the counter cond. is met
 end
+   
 
- 
-%to find the power of the last prime
-%-------------------------------------------------------------------------
-if bp<firstn
-    finaln=bp;
-else
-    finaln=firstn;
-end
-
-fprintf('\nThe first %i prime factor(s) is(are):\n',finaln);
-
-for i=1:1:finaln
-    fprintf('the prime %i with power %i\n', bprime(1,i),nup(1,i))
-end
-
-%print out
-%-------------------------------------------------------------------------
-
-
-if size(A)==1
-    fprintf('\n%i is a prime number.\n',n);
-else
-    fprintf('\n%i is not a prime number.\n',n);
-end
-%-------------------------------------------------------------------------

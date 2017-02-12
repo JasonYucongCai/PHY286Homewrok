@@ -1,30 +1,42 @@
-function[]=HW01_Problem_05(n)
-%The function that accepts a single input integer and determines if the 
-%input integer is prime.
+function [output] = HW01_Problem_05(input)
+%function [output] = HW01_Problem_05(input)
 %
-%Single input integer and determins if the input integer is prime.
-%The program will determine weather the integer is prime or not.
-%Yuocng Cai
-%-------------------------------------------------------------------------
-if nargin ~=1 %nargin -- new concept! see help nargin
-  disp('Need exactly one inputs. See help');
-    %error('Need exactly two inputs. See help');
-  return;
-end
-%Input comfirm, Structure comfirm
-%-------------------------------------------------------------------------
+%This function determines whether a number is prime or not
+%
+%Input: input: a number that the user enters
+%
+%Output: output: displays a message saying if the number entered is prime
 
-if n<0
-    n=(-n);
+%--------------------error check------------------------------
+
+if nargin ~= 1
+      error('This function requires one argument.');
 end
-%Input comfirm, legal adjusting.
-%-------------------------------------------------------------------------
-A=factor(n);
-%The size of the number.
-%-------------------------------------------------------------------------
-if size(A)==1
-    fprintf('%i is a prime number.\n',n);
+
+%--------------------set up-----------------------------------
+
+remainder = 1;  % variable that holds the remainder of (input / all numbers less than input and > 1)
+IsNotPrime = false; % will be set to true if remainder ever equals 0
+
+%--------------------calculate--------------------------------
+
+if (input < 2) % 1 is not prime
+    IsNotPrime = true;
 else
-    fprintf('%i is not a prime number.\n',n);
+    
+for i = 2:input-1 % divides input by numbers from (2 to input - 1)
+    remainder = rem(input, i); % store remainder value
+    
+    if (remainder == 0) % if input can be divided by a number with no remainder then it is not prime
+    IsNotPrime = true; 
+    end
 end
-%-------------------------------------------------------------------------
+end
+
+%--------------------display results------------------------------
+
+if (IsNotPrime == true) % display results with a fun easy to read message!!
+    output = sprintf('The number %d is not a prime number!', input);
+else
+    output = sprintf('The number %d is a prime number!', input);
+end
