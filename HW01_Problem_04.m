@@ -17,6 +17,10 @@ if nargin ~= 1
       error('This function requires one argument.');
 end
 
+if n <= 0
+    error('This function should print at least one number.');
+end
+
 %--------------------calculate--------------------------------
 
 nth_term = ((1+sqrt(5))^n - (1-sqrt(5))^n) / (2^n * sqrt(5)); % calculates the closed form of the fibonacci sequence

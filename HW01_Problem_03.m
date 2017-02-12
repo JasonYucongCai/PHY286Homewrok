@@ -13,6 +13,10 @@ if nargin ~= 1
       error('This function requires one argument.');
 end
 
+if n <= 0
+    error('This function should print at least one number.');
+end
+
 %--------------------set up-----------------------------------
 
 if n == 1 || n == 2 % the first two terms are 1 and 1
