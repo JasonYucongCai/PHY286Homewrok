@@ -24,6 +24,24 @@ function [Nt, Nt_exact, time] = HW02_Problem_01(N_0, a, b, dt, t_end)
 %       
 %       when the ratio a/b = N_0 a horizontal line will result at y = N_0
 
+
+%check
+%-------------------------------------------------------------------------
+if nargin ~=5 %nargin -- new concept! see help nargin
+  disp('Need exactly five inputs. See help');
+    %error('Need exactly two inputs. See help');
+  return;
+end
+%Input comfirm, Structure comfirm
+%-------------------------------------------------------------------------
+if n<0 || T<0 || N0<0
+    error('check your input, the population, time, or step could not be negative.');
+end
+%Input comfirm, legal adjusting.
+%-------------------------------------------------------------------------
+
+
+
 %-----------------initial values----------------
 
 time = [0:dt:t_end]; 
