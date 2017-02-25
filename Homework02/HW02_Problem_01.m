@@ -24,7 +24,7 @@ function [Nt, Nt_exact, time] = HW02_Problem_01(N_0, a, b, dt, t_end)
 %       
 %       when the ratio a/b = N_0 a horizontal line will result at y = N_0
 
-
+%{
 %check
 %-------------------------------------------------------------------------
 if nargin ~=5 %nargin -- new concept! see help nargin
@@ -39,7 +39,7 @@ if n<0 || T<0 || N0<0
 end
 %Input comfirm, legal adjusting.
 %-------------------------------------------------------------------------
-
+%}
 
 
 %-----------------initial values----------------
