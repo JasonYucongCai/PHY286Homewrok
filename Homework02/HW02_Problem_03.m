@@ -1,3 +1,78 @@
+
+function[]=HW02_Problem_03(prey,predator,T,dt,ER)
+
+%check
+%-------------------------------------------------------------------------
+if nargin ~=5 %nargin -- new concept! see help nargin
+  disp('Need exactly five inputs. See help');
+    %error('Need exactly two inputs. See help');
+  return;
+end
+%Input comfirm, Structure comfirm
+%-------------------------------------------------------------------------
+if prey<1 || predator<1 || dt>T || dt<0
+ %   fprintf('Check your input, prey or predator must be bigger or equal\n');
+    error('Check your input, prey or predator must be bigger or equal to 1, T>=dt>0.');
+end
+
+
+
+a=1/3;b=4/3;
+v=1/3;u=4/3;
+
+x(1)=prey;
+y(1)=predator;
+n=floor(T/dt)
+
+
+switch ER
+    case 'Euler'
+        disp('Using Euler methods');
+        
+        for i=1:n-1 %where i was the index
+        dx(i)=a*x(i)-b*y(i);
+        dy(i)=v*x(i)-u*y(i);
+        x(i+1)=x(i)+dx(i)*dt;
+        y(i+1)=y(i)+dy(i)*dt;
+        end
+                
+    case 'RK'
+        disp('Using RK methods');
+      
+        for i=1:n-1 
+        rkx=x(i)+(1/2)*(a*x(i)-b*y(i))*dt;
+        rky=y(i)+(1/2)*(v*x(i)-u*y(i))*dt;
+        x(i+1)=x(i)+(a*rkx-b*rky)*dt;
+        y(i+1)=y(i)+(v*rkx-u*rky)*dt;    
+        end
+        
+    
+    otherwise
+        error('Check your input choice Euler or RK');
+
+end
+time=linspace(0,n*dt,n)
+
+%Input comfirm, legal adjusting.
+%-------------------------------------------------------------------------
+figure
+subplot(2,1,1); 
+plot(time,x,'b.-',time,y,'r.-');
+title('Prey & Predator vs. Time');
+xlabel('Time (dimensionless)');
+ylabel('Population of Prey & Predator');
+legend('Prey','Predator');
+
+subplot(2,1,2); 
+plot(x, y);
+title('Phase Plot, Predator vs. Prey');
+xlabel('Prey');
+ylabel('Predator');
+
+end
+
+
+%{
 function [prey, predator, time] = HW03_Problem_03(alpha, beta, delta, gamma, prey_0, predator_0, dt, t_max, choice)
 %function [prey, predator, time] = HW03_Problem_03(alpha, beta, delta, gamma, prey_0, predator_0, dt, t_max, choice)
 %
@@ -67,4 +142,4 @@ title('Phase Plot, Predator vs. Prey');
 xlabel('Prey');
 ylabel('Predator');
 
-
+%}
