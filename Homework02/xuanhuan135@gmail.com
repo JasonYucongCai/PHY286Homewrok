@@ -92,7 +92,6 @@ p_0 = 1.225; %approximate value of air density at sea level
 counter_n = 1;
 
 while y_normal(counter_n) >= 0
-    
     %velocity
     vx_normal(counter_n + 1) = vx_normal(counter_n) + dt.*0;
     vy_normal(counter_n + 1) = vy_normal(counter_n) + dt.*(-g);
@@ -249,7 +248,8 @@ xmin=zeros();
 n=1;
 n=2;
 ratio=1/2;
-
+for h=1:2
+    xmin(end)=0;
 while (abs(xmax(end)-xmin(end)))>=range_approx_tolorance  
     
     
@@ -334,7 +334,7 @@ end
         end
         
     n=n+1;
-    if n>200;
+    if n>2000;
         disp('adjust the tolorance regin');
         break;
     end
@@ -454,6 +454,8 @@ disp(theta2)
 %-----------------------------------------------------------------
 end
 
+n=2;
+end
 
 %comput the maxmium angle for the normal-----------------------bot
 %-------------------------------------------    
@@ -480,3 +482,30 @@ fprintf('\n The maxminum angle the ball could be throuwn under the\n condition o
 fprintf('\nThe projectile that did not take into account drag or density \n traveled approximately %.3f meters.\n', range_normal); 
 fprintf('The projectile that only took into account drag traveled approx\nimately %.3f meters.\n', range_airdrag); 
 fprintf('The projectile that took into account both drag and density trav\neled approximately %.3f meters.\n', range_density);  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
