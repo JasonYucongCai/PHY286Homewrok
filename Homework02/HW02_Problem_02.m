@@ -1,4 +1,4 @@
-function [x_normal, y_normal, x_airdrag, y_airdrag, x_density, y_density, Py] = HW02_Problem_02(v0, theta, dt, B, m)
+function [] = HW02_Problem_02(v0, theta, dt, B, m,range_approx_tolorance)
 %function [x_normal, y_normal, x_airdrag, y_airdrag, x_density, y_density, Py] = HW02_Problem_02(v0, theta, dt, B, m)
 %
 %This function displays the trajectory of an object in three ways.  First,
@@ -11,6 +11,8 @@ function [x_normal, y_normal, x_airdrag, y_airdrag, x_density, y_density, Py] = 
 %       dt: time-step
 %       B: drag coefficient
 %       m: mass of the object
+%       range_approx_tolorance:constant where the range apporximation was
+%       allowed
 %
 %Output: x_normal: the x position of the object fired without taking into
 %                  account air resistance or density
@@ -28,6 +30,30 @@ function [x_normal, y_normal, x_airdrag, y_airdrag, x_density, y_density, Py] = 
                   
 %-----------------------initial values-------------------------------------
 
+
+%-------------------------------------------------------------------------
+if nargin ~=6 %nargin -- new concept! see help nargin
+  disp('Need exactly six inputs. See help');
+    %error('Need exactly two inputs. See help');
+  return;
+end
+%Input comfirm, Structure comfirm
+%-------------------------------------------------------------------------
+if v0<0 || dt<0 || B<0 || m<0 || range_approx_tolorance<0
+    error('check your input, v0,dt, B, m,range_approx_tolorance could not be negative.');
+end
+
+if theta<=0|| theta>=(pi/2)
+    error('check your input, theta must between 0 to pi/2 and not including 0 and pi/2 .');
+    
+end
+
+%Input comfirm, legal adjusting.
+%-------------------------------------------------------------------------
+
+
+
+
 %position
 x_normal(1) = 0;
 y_normal(1) = 0;
@@ -36,17 +62,18 @@ x_airdrag(1) = 0;
 y_airdrag(1) = 0;
 
 x_density(1) = 0;
+
 y_density(1) = 0;
 
 %velocity
-vx_normal(1) = v0.*cosd(theta);
-vy_normal(1) = v0.*sind(theta);
+vx_normal(1) = v0.*cos(theta);
+vy_normal(1) = v0.*sin(theta);
 
-vx_airdrag(1) = v0.*cosd(theta);
-vy_airdrag(1) = v0.*sind(theta);
+vx_airdrag(1) = v0.*cos(theta);
+vy_airdrag(1) = v0.*sin(theta);
 
-vx_density(1) = v0.*cosd(theta);
-vy_density(1) = v0.*sind(theta);
+vx_density(1) = v0.*cos(theta);
+vy_density(1) = v0.*sin(theta);
 
 %constants
 g = 9.8;
@@ -55,14 +82,17 @@ y_0 = 10000; %approximate value from book, calculated as (kB*T/m*g)
 %pressure
 p_0 = 1.225; %approximate value of air density at sea level
 
-Py(1) = p_0.*exp(-y_density(1)./y_0);
-
 %--------------------------compute-----------------------------------------
+%(adjusted)
+%first calculation
+%-------------------------------------------------------------------------
 
 %projectile with neither drag nor density
+
 counter_n = 1;
+
 while y_normal(counter_n) >= 0
-   
+    
     %velocity
     vx_normal(counter_n + 1) = vx_normal(counter_n) + dt.*0;
     vy_normal(counter_n + 1) = vy_normal(counter_n) + dt.*(-g);
@@ -71,9 +101,10 @@ while y_normal(counter_n) >= 0
     x_normal(counter_n + 1) = x_normal(counter_n) + dt.*(vx_normal(counter_n));
     y_normal(counter_n + 1) = y_normal(counter_n) + dt.*(vy_normal(counter_n));
    
-    %increment counter_n
+    %increment counter_n    
+    
     counter_n = counter_n + 1;
-end
+end%-------------------without out air drag
 
 %projectile with drag only
 counter_d = 1;
@@ -89,7 +120,7 @@ while y_airdrag(counter_d) >= 0
     
     %increment counter_d
     counter_d = counter_d + 1;
-end
+end%---------------------with air drag
 
 %projectile with both drag and density
 counter_dd = 1;
@@ -107,11 +138,11 @@ while y_density(counter_dd) >= 0
     
     %increment counter_dd
     counter_dd = counter_dd + 1;
-end
+end%-------------------------with air drag and air density
 
 %compute range of projectile
 r_normal = - (y_normal(end - 1) / y_normal(end));
-range_normal = (x_normal(end - 1) + r_normal*x_normal(end)) / (r_normal + 1);
+range_normal = (x_normal(end - 1) + r_normal * x_normal(end)) / (r_normal + 1);
 
 r_airdrag = - (y_airdrag(end - 1) / y_airdrag(end));
 range_airdrag = (x_airdrag(end - 1) + r_airdrag*x_airdrag(end)) / (r_airdrag + 1);
@@ -119,10 +150,134 @@ range_airdrag = (x_airdrag(end - 1) + r_airdrag*x_airdrag(end)) / (r_airdrag + 1
 r_density = - (y_density(end - 1) / y_density(end));
 range_density = (x_density(end - 1) + r_density*x_density(end)) / (r_density + 1);
 
-%----------------------------plot------------------------------------------
+%-------------------------------------------------------------------------
+%comput the maxmium angle for the normal------------------------up
+%chose the reference angle
+%known v0, theta, dt, B, m,range_approx_tolorance
+%converage the variables
 
-plot(x_normal,y_normal,'r.-', x_airdrag, y_airdrag,'b.-', x_density, y_density, 'g.-');
-legend('Without Drag or density', 'With Drag only', 'With Drag and Density');
+theta2=theta+ (pi)/3;
+theta_max2=theta;
+if theta2>=pi/2 %creat a initial comparation
+theta2=theta-(pi/2);
+end
+
+x_normal(counter_n)=range_normal;%fix the range msitakes
+xmax=x_normal;
+xmin=zeros();
+yax2=y_normal;
+
+%-----------------------------------------------------------------------
+while ((xmax(end)-xmin(end)).^2)>=range_approx_tolorance
+    counter_n = 1;
+    %cleanup;
+    vx_normal2=zeros();
+    vy_normal2=zeros();
+    x_normal2=zeros();
+    y_normal2=zeros();
+    vx_normal2(1) = v0.*cos(theta2);
+    vy_normal2(1) = v0.*sin(theta2);
+    
+    while y_normal2(counter_n) >= 0
+    %velocity
+    vx_normal2(counter_n + 1) = vx_normal2(counter_n) + dt.*0;
+    vy_normal2(counter_n + 1) = vy_normal2(counter_n) + dt.*(-g);
+    %position
+    x_normal2(counter_n + 1) = x_normal2(counter_n) + dt.*(vx_normal2(counter_n));
+    y_normal2(counter_n + 1) = y_normal2(counter_n) + dt.*(vy_normal2(counter_n));
+    %increment counter_n
+    counter_n = counter_n + 1;
+    end%-------------------without out air drag
+    
+    
+
+    r_normal2 = - (y_normal2(end - 1) / y_normal2(end));
+    range2 = (x_normal2(end - 1) + r_normal2 * x_normal2(end)) / (r_normal2 + 1);
+    
+%change angle-----------------------------------------------    
+    if range2>xmax(end)%-----------------------------------------------       
+        
+        switch 1
+        case theta_max2<theta2
+            if (theta2*(range2/xmax(end)))>=(pi/2)
+                theta_max2=theta2;
+                theta2=(pi/2+theta)/2;
+            else
+                theta_max2=theta2;
+                theta2=theta2*(range2/xmax(end));
+            end
+        case theta_max2>theta2
+            theta2=theta2*(xmax(end)/range2);
+            otherwise
+    
+            disp('angles are equal1');
+            break;    
+        end
+    elseif range2==xmax(end)%----------------------------------------
+        break;
+    else%range2<max(end)---------------------------------------------
+       %theta_max2 didn't change  
+        switch 1
+        case theta_max2<theta2                
+            theta2=theta_max2*range2/xmax(end);
+        case theta_max2>theta2
+           if (theta_max2*(xmax(end)/range2))>=(pi/2)
+                theta2=(pi/2+theta_max2)/2;
+            else
+                theta2=theta_max2*(xmax(end)/range2);
+            end
+            otherwise
+        
+            disp('angles are equal2');
+            break;    
+        end
+        
+    end
+%change range----------------------------------------------------
+        xmin=zeros(1);
+        x_normal2(end)=range2;
+        
+    if range2>xmax(end)
+        yax2=zeros();
+        yax2=y_normal2;
+        xmin=xmax;
+        xmax=x_normal2;
+    elseif range2==xmax(end)
+        disp('range didn not change');
+        break;
+    else%range2<max(end)
+       %max didn't change        
+      % xmin=x_nromal;
+    end
+    
+    xmax(end)
+    xmin(end)
+     theta2
+     theta_max2
+   disp('round 1');
+
+   
+   
+   %change angle and range
+%-----------------------------------------------------------------
+end
+disp('angle');
+theta_max2
+
+%comput the maxmium angle for the normal-----------------------bot
+%-------------------------------------------    
+
+%----------------------------plot------------------------------------------
+figure
+
+%plot(x_normal,y_normal,'r.-', x_airdrag, y_airdrag,'b.-');
+%legend('Without Drag or density', 'With Drag only');
+%hold on;
+%plot(x_density, y_density, 'g.-', )
+plot(x_normal,y_normal,'r-o', x_airdrag, y_airdrag,'b-o',x_density,y_density, 'g.-',xmax, yax2, 'c.-');
+
+
+legend('Without Drag or density', 'With Drag only', 'With Drag and Density','max');
 xlim([0 inf]);
 ylim([0 inf]);
 xlabel('X (m)');
@@ -130,11 +285,6 @@ ylabel('Y (m)');
 title('Projectile Motion');
   
 %---------------------------display other info----------------------------- 
-
-disp(' ');
-fprintf('The projectile that did not take into account drag or density traveled approximately %.3f meters.', range_normal); 
-disp(' ');
-fprintf('The projectile that only took into account drag traveled approximately %.3f meters.', range_airdrag); 
-disp(' ');
-fprintf('The projectile that took into account both drag and density traveled approximately %.3f meters.', range_density);  
- 
+fprintf('\nThe projectile that did not take into account drag or density traveled approximately %.3f meters.\n', range_normal); 
+fprintf('The projectile that only took into account drag traveled approximately %.3f meters.\n', range_airdrag); 
+fprintf('The projectile that took into account both drag and density traveled approximately %.3f meters.\n', range_density);  
