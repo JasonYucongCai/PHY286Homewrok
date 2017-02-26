@@ -1,5 +1,4 @@
 
-
 function[]=HW02_Problem_03(prey,predator,T,dt,ER)
 
 %check
@@ -23,7 +22,7 @@ v=1/3;u=4/3;
 
 x(1)=prey;
 y(1)=predator;
-n=floor(T/dt)
+n=floor(T/dt);
 
 
 switch ER
@@ -85,7 +84,7 @@ legend('Prey','Predator');
 subplot(2,1,2); 
 plot(x, y);
 title('Phase Plot, Predator vs. Prey');
-xlabel('Prey');  
+xlabel('Prey');
 ylabel('Predator');
 
 end
