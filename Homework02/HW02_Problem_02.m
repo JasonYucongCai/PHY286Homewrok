@@ -468,7 +468,7 @@ figure
 plot(x_normal,y_normal,'r-o', x_airdrag, y_airdrag,'m-x',x_density,y_density, 'y.-',xmax, yax2, 'b.-');
 
 
-legend('Without Drag or density', 'With Drag only', 'With Drag and Density','max with air resistance');
+legend('Without Drag or density', 'With Drag only', 'With Drag and Density','max with air resistance and change of density');
 xlim([0 inf]);
 ylim([0 inf]);
 xlabel('X (m)');
