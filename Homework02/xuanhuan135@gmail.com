@@ -248,7 +248,7 @@ xmin=zeros();
 n=1;
 n=2;
 ratio=1/2;
-for h=1:2
+for h=1:2%round number, add the number to get more accuracy.
     xmin(end)=0;
 while (abs(xmax(end)-xmin(end)))>=range_approx_tolorance  
     
@@ -476,13 +476,28 @@ ylim([0 inf]);
 xlabel('X (m)');
 ylabel('Y (m)');
 title('Projectile Motion');
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %---------------------------display other info----------------------------- 
 fprintf('\n The maxminum angle the ball could be throuwn under the\n condition of drag and change of flew density \nis %.5f with a tolorance of %f\nthe final distance is %.3f', theta_max2,range_approx_tolorance,xmax(end));
 fprintf('\nThe projectile that did not take into account drag or density \n traveled approximately %.3f meters.\n', range_normal); 
 fprintf('The projectile that only took into account drag traveled approx\nimately %.3f meters.\n', range_airdrag); 
 fprintf('The projectile that took into account both drag and density trav\neled approximately %.3f meters.\n', range_density);  
-
 
 
 
