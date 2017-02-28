@@ -296,7 +296,7 @@ ylabel('Y (m)');
 title('Projectile Motion');
   
 %---------------------------display other info----------------------------- 
-fprintf('\n The max_range_minumum angle the ball could be throuwn under the\n condition of drag and change of flew density \nis %.5f degree with a tolorance of %f m\nthe final distance is %.3f m\n\n', theta_max2/pi*180,range_approx_tolorance,x_range_maxium(end));
+fprintf('\n The angle that maxmizes the range of the projectile that\n accounted for air drag and density is %.5f degree\n with a calculation tolorance of %f m.\n the final distance is %.3f m\n\n', theta_max2/pi*180,range_approx_tolorance,x_range_maxium(end));
 fprintf('\nThe projectile that did not take into account drag or density \n traveled approximately %.3f meters.\n', range_normal); 
 fprintf('The projectile that only took into account drag traveled approx\nimately %.3f meters.\n', range_airdrag); 
 fprintf('The projectile that took into account both drag and density trav\neled approximately %.3f meters.\n', range_density);  
