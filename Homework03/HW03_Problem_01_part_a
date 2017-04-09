@@ -1,0 +1,96 @@
+function [  ] = HW03_Problem_01_part_a( x_initial,N,choice,alpha_initial,beta_intial )
+%x_initial was the initial xi
+%N was the maxmium steps
+% choice either 'multi' or 'single' display combiniation or graph or a single graph. 
+%single case neeed the additional alpha_initial and beta_intial input
+
+%----------------------------error check-----------------------------------
+switch choice
+    case 'multi'
+        if nargin ~= 3&&nargin ~= 4&&nargin ~= 5
+            error('This function requires 3 inputs');
+        end
+        
+    case 'single'
+        if nargin ~= 5
+            error('This function requires 5 inputs');
+        end
+    otherwise
+        error('see help');
+end
+
+%---------------------error check------------------------------------------
+
+
+n=8;
+%a=
+for beta=0:1
+    for alpha=1:15
+        alpha_position=alpha;
+        beta_position=beta+1;
+        x_step(alpha_position,beta_position,1)=x_initial;
+        
+        for i=1:N-1
+        
+        x_step(alpha_position,beta_position,i+1)=mod((alpha*x_step(alpha_position,beta_position,i)*(2^n)+beta),2^n)/(2^n);
+        
+        end
+    end
+ 
+end
+
+x_axis=1:N;
+
+
+
+
+switch choice
+
+    case 'multi'
+    
+figure (1)
+
+beta=0;
+hold on
+for alpha=1:15
+    
+    alpha_position=alpha;
+    beta_position=beta+1;
+    y_axis=x_step(alpha_position,beta_position,:);
+    y_axis=reshape(y_axis,1,[]);
+    plot(x_axis,y_axis,'-b');
+    
+end
+hold off
+
+figure (2)
+
+beta=1;
+hold on
+for alpha=1:15
+
+    alpha_position=alpha;
+    beta_position=beta+1;
+    y_axis=x_step(alpha_position,beta_position,:);
+    y_axis=reshape(y_axis,1,[]);
+    plot(x_axis,y_axis,'-b');
+    
+end
+hold off
+
+    case 'single'
+    
+    figure (1)
+    %can selet alpha dne beta here;
+    beta=beta_intial;
+    alpha_position=alpha_initial;
+    beta_position=beta+1;
+    y_axis=x_step(alpha_position,beta_position,:);
+    y_axis=reshape(y_axis,1,[]);
+    plot(x_axis,y_axis,'-b');
+    
+
+end
+
+
+end
