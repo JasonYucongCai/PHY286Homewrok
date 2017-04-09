@@ -1,0 +1,168 @@
+function [  ] = HW03_Problem_01_part_b( x_initial,N,choice,  m_max,   alpha_initial,  beta_intial,mod_value_initial)
+%x_initial was the initial xi
+%N was the maxmium steps
+% choice either 'multi' or 'single' display combiniation or graph or a single graph. 
+%single case neeed the additional alpha_initial and beta_intial input
+%m_max must be a positive integer >1
+%multi produce 4*m_max matrix of graph. don't set m_max too large
+%example:  HW03_Problem_01_part_b(0.55,100,'multi')
+%HW03_Problem_01_part_b(0.55,100,'single',8,11,1,3)
+%----------------------------error check-----------------------------------
+switch choice
+    case 'multi'
+        if nargin ~= 4&&nargin ~= 5&&nargin ~= 6&&nargin ~= 7
+            error('This function requires 4 inputs');
+        end
+        
+    case 'single'
+        if nargin ~= 7
+            error('This function requires 6 inputs');
+        end
+        
+        if (beta_intial ~= 0) && (beta_intial ~= 1)
+            error('beta mubst be 0 or 1');
+        end
+        
+        if mod_value_initial~=1 && mod_value_initial~=3
+            error('mod_value must be 1 or 3');
+        end
+        
+
+    otherwise
+        error('see help');
+end
+
+
+
+
+%---------------------error check------------------------------------------
+
+
+n=8;
+%a=
+
+for mod_value=1:2:3%8m+- mod_value
+for beta=0:1
+    for m_index=1:m_max%index alpha value
+        
+        for n_sign=1:2%+- mod_value
+        
+        alpha_position=(8*m_index)+(mod_value*(-1)^n_sign);%alpha
+        alpha=alpha_position;
+        
+        mn_index=2*(m_index-1)+n_sign;
+        round_mod(mod_value,mn_index,beta+1)=alpha_position;
+        beta_position=beta+1;
+        x_step(alpha_position,beta_position,1,mod_value)=x_initial;
+        
+        for i=1:N-1
+        
+        x_step(alpha_position,beta_position,i+1,mod_value)=mod((alpha*x_step(alpha_position,beta_position,i,mod_value)*(2^n)+beta),2^n)/(2^n);
+
+        end
+  
+        end
+               
+    end
+end
+end%mode for
+
+
+x_axis=1:N;
+
+
+
+
+switch choice
+
+    case 'multi'
+
+        
+for mod_value=1:2:3
+figure (mod_value);
+%two graph with different mod_value
+
+for beta_position=1:2;
+
+    for mn_index=1:(m_max*length(1:2:3))%index alpha value--------------------------------------------------------
+       % for n_sign=1:2%+- mod_value
+        %alpha_position=8*m_index+((-mod_value)^n);%alpha
+    alpha_position=round_mod(mod_value,mn_index,beta_position);
+        
+    %----------------------------------------------------------------------------------------------------------------
+    round_mod(mod_value,mn_index,beta_position);
+
+    y_axis=x_step(alpha_position,beta_position,:,mod_value);
+    y_axis=reshape(y_axis,1,[]);
+    
+    
+%subplot arrange 2---------------------------------------------------------
+    
+
+row_number=4;
+colum_number=ceil(m_max);
+
+sub_beta=floor(beta_position/2)*ceil(m_max*2);
+sub_alpha=mn_index;    
+
+subplot(row_number,colum_number,sub_beta+sub_alpha);
+    
+%subplot arrange 2---------------------------------------------------------
+  
+    plot(x_axis,y_axis,'-b');%xlabel('Time, t [s]'); ylabel('Angular displacement, \theta [rad]');
+    title(sprintf('\\beta = %0.2f, \\alpha = %0.2f', beta_position-1, alpha_position));
+
+        %end
+    end
+end
+
+end
+
+
+
+
+
+    case 'single'
+        
+        
+        
+if length(find(round_mod(mod_value_initial,:,beta_intial+1)==alpha_initial))==0
+    error('illegal value of alpha_initial');
+
+end
+
+
+
+    figure (5)
+    %can selet alpha dne beta here;
+    beta=beta_intial;
+    alpha_position=alpha_initial;
+    beta_position=beta+1;
+    
+    y_axis=x_step(alpha_position,beta_position,:,mod_value);
+    y_axis=reshape(y_axis,1,[]);
+    plot(x_axis,y_axis,'-b');
+    
+
+end
+
+%{
+fprintf('It kept constant for alpha =0, so it was not necessary to show it in the funciton.\n');
+fprintf('For the practice of programming, only alpha =1:15 was shown.\n');
+fprintf('After compare the x_initial=0:0.01:1.\n');
+fprintf('When beta =0, alpha=2,4,6,3,7,9,15.\n');
+fprintf('When beta =1, alpha=2,4.\n');
+fprintf('Was a good approximation.\n');
+
+fprintf('When beta =0, alpha=2,4,6,3,7,9,15.\n');
+fprintf('When beta =1, alpha=2,4.\n');
+fprintf('Was a good approximation.\n');
+
+
+fprintf('When beta =0, alpha=10,12,14,1,5,11.\n');
+fprintf('When beta =1, alpha=10,12,14,1,3,5,7,9,11,13.\n');
+fprintf('Was a bad approximation.\n');
+%}
+
+
+end
