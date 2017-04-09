@@ -1,5 +1,5 @@
 function [ output_args ] = HW03_Problem_022( x_initial, y_initial,z_initial,delta,t_max,delta_r)
-%coloned form
+%cloned form
 %   Detailed explanation goes here
 
 %a=10;
@@ -42,7 +42,7 @@ z(i+1)=z(i)+fzrk*delta;
 end
 
 
-
+%----------------------------------------------------------cloned code -------------------------------------------
 index = find(t_axis>t_max/1.5);
 
 indexed_x = x(index);
@@ -90,7 +90,7 @@ plot(plot_r, plot_z, '.k');
 xlabel('r');
 ylabel('z');
 title('Bifurcation diagram of the Lorenz Model');
-
+%----------------------------------------------------------cloned code -------------------------------------------
 
 function [dx,dy,dz] = RK_function(x,y,z,r) 
 % evaluate the function at x and return its value 
