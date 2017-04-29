@@ -1,0 +1,143 @@
+function [n, m, h, I_k, I_na, I_leak, I_injected, V, time] = final_project_v2(V0, I_constant, I_excite, t_start, t_end, dt, tmax)
+%
+%Note book gives n0 = 0, m0 = 0, h0 = 1 for t = 0
+%based on other figures, V0 = 0 and I_excite could be a range of values(I
+%use .01 based on figure 12.40)
+
+%book reference gives V0 = -10.613, G_k = 36, G_na = 120
+
+
+
+%==========================================================================
+%                           Initial Setup
+%==========================================================================
+
+%establish time vector
+time = linspace(0, tmax, round(tmax/dt));
+
+%establish n, m, h, I, V, alpha, beta vectors
+V = zeros(size(time));
+n = zeros(size(time));
+m = zeros(size(time));
+h = zeros(size(time));
+
+%initial values for V n m h where steady state initial values were
+%calculated
+V(1) = V0;
+n(1) = alpha_n(V(1)) / (alpha_n(V(1)) + beta_n(V(1)));
+m(1) = alpha_m(V(1)) / (alpha_m(V(1)) + beta_m(V(1)));
+h(1) = alpha_h(V(1)) / (alpha_h(V(1)) + beta_h(V(1)));
+
+I_k = zeros(size(time));
+I_na = zeros(size(time));
+I_leak = zeros(size(time));
+I_injected = ones(size(time))*I_constant;
+
+%constants
+C_m = 1;        %uF / cm^2
+G_k = 36;       %mS / cm^2 
+V_k = -12;      %mV
+G_na = 120;     %mS / cm^2 
+V_na = 115;     %mV
+G_leak = .3;    %mS / cm^2
+V_leak = 10.6;  %mV 
+
+
+%==========================================================================
+%                             Calculate
+%==========================================================================
+
+for count = 1:length(time) -1
+    
+    %EULER METHOD
+   
+    %I related vectors
+    I_k(count) = (G_k * (n(count))^4 * (V(count) - V_k));
+    I_na(count) = (G_na * (m(count))^3 * h(count) * (V(count)-V_na));
+    I_leak(count) = (G_leak * (V(count) - V_leak));
+    
+    %n, m, h vectors
+    n(count + 1) = n(count) + dt*(alpha_n(V(count))*(1-n(count)) - beta_n(V(count))*n(count));
+    m(count + 1) = m(count) + dt*(alpha_m(V(count))*(1-m(count)) - beta_m(V(count))*m(count));   
+    h(count + 1) = h(count) + dt*(alpha_h(V(count))*(1-h(count)) - beta_h(V(count))*h(count));
+    
+    %injected current, only for a specific range of time
+    if count >= t_start/dt && count <= t_end/dt
+        I_injected(count) =  I_constant + I_excite;
+    else
+        I_injected(count) = I_constant;
+    end
+    
+    %V vector
+    V(count + 1) = V(count) + dt*((1/C_m)*(I_injected(count) - I_k(count) - I_na(count) - I_leak(count)));
+end
+
+
+%==========================================================================
+%                             Plot
+%==========================================================================
+
+figure(1);
+plot(time, V, '');
+legend('V');
+xlabel('Time [ms]');
+ylabel('Voltage [mV]');
+title('Voltage vs. Time');
+
+% figure(2);
+% plot(time, I_k, '.', time, I_na, '.', time, I_injected, '.-');
+% legend('Ik', 'Ina', 'Iinjected');
+% xlabel('Time [ms]');
+% ylabel('Current [pA]');
+% title('Current vs. Time');
+
+% figure(1);
+% plot(time, n, time, m, time, h);
+% legend('n','m','h');
+% xlabel('Time [ms]');
+% ylabel('Dimensionless');
+% title('n, m, h vs. time');
+
+end
+
+
+
+%==========================================================================
+%                     Alpha and Beta Functions
+%==========================================================================
+
+%alpha and beta for 'n'
+function [alphan] = alpha_n(V)
+    %alphan = (.01 * (V + 10)) / (exp((V + 10) / 10) - 1);
+    alphan = (.01*(10-V)) / ((exp(.1*(10-V)) - 1));
+end
+
+function [betan] = beta_n(V)
+   %betan = .125*exp(V/80);
+   betan = .125*exp(-V/80); 
+end
+
+%alpha and beta for 'm'
+function [alpham] = alpha_m(V)
+    %alpham = .1*(V + 25) / (exp((V + 25) / 10) - 1);
+    alpham = (.1*(25-V)) / ((exp(.1*(25-V))) - 1);
+end
+
+function [betam] = beta_m(V)
+   %betam = 4*exp(V/18);
+   betam = 4*exp(-V/18);
+end
+
+%alpha and beta for 'h'
+function [alphah] = alpha_h(V)
+    %alphah = .07*exp(V/20);
+    alphah = .07*exp(-V/20);
+end
+
+function [betah] = beta_h(V)
+    %betah = 1 / (exp((V + 30) / 10) + 1);
+    betah = 1 / (1 + exp(.1*(30-V)));
+end
+
+
+
