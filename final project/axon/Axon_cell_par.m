@@ -2,6 +2,7 @@
 
 %Axon_cell_par(0,0,1,0,1,2,2,0.01,50,1E-15,12);
 function [] = Axon_cell_par(n_in, m_in, h_in,v_input,I_start_time, I_end_time,I_induct_value,dt,tmax,tolerance,N_axon)
+tic;
 
 %parpool('local',2);%--------------------------------------------------------------------------------------------------------------
 parpool('local');%shutdonw the pool by delete(gcp);
@@ -177,9 +178,9 @@ end
 
 end
 
-
+toc;
 figure (1)
-parfor j=1:N_axon
+for j=1:N_axon
 
     subplot(4,ceil(N_axon/4),j);
        plot(time_axis,v(j,:), '.b');
@@ -192,7 +193,7 @@ end
   
 figure (2)
 
-parfor j=1:N_axon
+for j=1:N_axon
     subplot(4,ceil(N_axon/4),j);
        plot(time_axis,I_induct(j,:),'.k',time_axis,I_n(j,:),'.b',time_axis,I_k(j,:),'.g');
        legend('Induct current','Na current','Ik current');
