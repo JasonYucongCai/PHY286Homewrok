@@ -1,4 +1,5 @@
 
+
 %Axon_cell_par(0,0,1,0,1,2,2,0.01,50,1E-15,12);
 function [] = Axon_cell_par(n_in, m_in, h_in,v_input,I_start_time, I_end_time,I_induct_value,dt,tmax,tolerance,N_axon)
 
@@ -125,13 +126,13 @@ for i=2:N-1
     
 
     time_axis=[time_axis, time_axis(i)+dt];    
+
     
+if mod(i,100)==2
     figure (3)
 
 for j=1:N_axon
-    
-    
-    
+
     subplot(4,ceil(N_axon/4),j);
        plot(time_axis,v(j,:), '.b');
        legend('V_plot');
@@ -154,7 +155,7 @@ for j=1:N_axon
     end
 end
       drawnow;
-    
+end
 %     
 %     
 % for j=1:N_axon
@@ -174,8 +175,32 @@ end
 %        
 % end
 
+end
 
 
+figure (1)
+parfor j=1:N_axon
+
+    subplot(4,ceil(N_axon/4),j);
+       plot(time_axis,v(j,:), '.b');
+       legend('V_plot');
+        if j==1
+    title(sprintf('Time step %d of %d at time %d s', i, N,(i*dt)));
+    end   
+     
+end
+  
+figure (2)
+
+parfor j=1:N_axon
+    subplot(4,ceil(N_axon/4),j);
+       plot(time_axis,I_induct(j,:),'.k',time_axis,I_n(j,:),'.b',time_axis,I_k(j,:),'.g');
+       legend('Induct current','Na current','Ik current');
+       %ylim([-0.01 0.02]);
+       
+           if j==1
+    title(sprintf('Time step %d of %d at time %d s', i, N,(i*dt)));
+    end
 end
 
 delete(gcp);%------------------------------------------------------------------------------------------------------------------
