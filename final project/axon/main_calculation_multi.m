@@ -81,7 +81,8 @@ end
  
  
 function[bn_out]=beta_n(v_suv_in)
-bn_out=0.125*exp(-v_suv_in/20);
+%bn_out=0.125*exp(-v_suv_in/20);
+bn_out=0.125*exp(-v_suv_in/80);
 end
  
 function[am_out]=alpha_m(v_suv_in)
