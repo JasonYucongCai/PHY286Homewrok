@@ -1,7 +1,7 @@
 
 % fp2(0.5,1,30,30,0.01,210,1E-15);
 
-function [] = fp2(I_start_time,I_duration,I_separation,I_induct_value,dt,tmax,tolerance)
+function [] = singlecell_perodic_excitation(I_start_time,I_duration,I_separation,I_induct_value,dt,tmax,tolerance)
 
 %I_start_time, I_end_time,I_induct_value
 
@@ -304,7 +304,8 @@ end
  
  
 function[bn_out]=beta_n(v_suv_in)
-bn_out=0.125*exp(-v_suv_in/20);
+%bn_out=0.125*exp(-v_suv_in/20);
+bn_out=0.125*exp(-v_suv_in/80);
 end
  
 function[am_out]=alpha_m(v_suv_in)
