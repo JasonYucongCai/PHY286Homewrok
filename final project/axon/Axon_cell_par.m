@@ -1,7 +1,5 @@
-
-
 %Axon_cell_par(0,0,1,0,1,2,2,0.01,50,1E-15,12);
-function [] = Axon_cell_par(n_in, m_in, h_in,v_input,I_start_time, I_end_time,I_induct_value,dt,tmax,tolerance,N_axon)
+function [] = Axon_cell_par_fluid(n_in, m_in, h_in,v_input,I_start_time, I_end_time,I_induct_value,dt,tmax,tolerance,N_axon)
 tic;
 
 %parpool('local',2);%--------------------------------------------------------------------------------------------------------------
@@ -37,7 +35,9 @@ time_axis=0;
 
 if P_N~=0
    %for i=1:2%P_N
-    time_axis=[time_axis, time_axis(1)+dt];
+    
+   
+%    time_axis=[time_axis, time_axis(1)+dt];---------------------------
    %end
 end
 
@@ -48,8 +48,16 @@ I_induct(j+1,1)=I_k(j,2)+I_n(j,2)+I_L(j,2);
 end
 
 
+CF=0.02;    %-----------------------------------------------------------------------------conductance of the fluid---------------------
 
-for i=2:N-1
+if N_axon~=1
+Length_compartment= 1/(N_axon-1);
+else
+Length_compartment=1;
+end
+CF_act=Length_compartment*CF;
+
+for i=1:N-1
     
 
     
@@ -62,25 +70,27 @@ for i=2:N-1
     I_induct(1,i+1)= I_induct_initial_compartment;
     [v(1,i+1),n(1,i+1), m(1,i+1),h(1,i+1),I_k(1,i+1),I_n(1,i+1),I_L(1,i+1)]=main_calculation_multi(n(1,i),m(1,i),h(1,i),dt,v(1,i),I_induct_initial_compartment);
     
-    I_induct(2,i)=I_k(1,i+1)+I_n(1,i+1)+I_L(1,i+1);
+    %I_induct(2,i)=I_k(1,i+1)+I_n(1,i+1)+I_L(1,i+1);
     
-%        fixed_i=i;
-%        ti1(j)=n(j,fixed_i-1);
-%        ti2(j)=m(j,fixed_i-1);
-%        ti3(j)=h(j,fixed_i-1);
-%        ti4(j)=dt;
-%        ti5(j)=v(j,fixed_i-1);
-%        ti6(j)=I_induct(j,fixed_i-1);
-%     
+    I_induct(2,i)=CF_act*(v(1,i)-v(2,i));%----------------------------------------------------------------------------------------------------------------------
+
      parfor j=1:N_axon
          
-       ti1(j)=n(j,i-1);
-       ti2(j)=m(j,i-1);
-       ti3(j)=h(j,i-1);
+%        ti1(j)=n(j,i-1);
+%        ti2(j)=m(j,i-1);
+%        ti3(j)=h(j,i-1);
+%        ti4(j)=dt;
+%        ti5(j)=v(j,i-1);
+%        ti6(j)=I_induct(j,i-1);
+%     
+       ti1(j)=n(j,i);
+       ti2(j)=m(j,i);
+       ti3(j)=h(j,i);
        ti4(j)=dt;
-       ti5(j)=v(j,i-1);
-       ti6(j)=I_induct(j,i-1);
-    
+       ti5(j)=v(j,i);
+       ti6(j)=I_induct(j,i);
+%     
+
      end
      
      parfor j=1:N_axon
@@ -88,48 +98,42 @@ for i=2:N-1
         [to1(j),to2(j),to3(j),to4(j),to5(j),to6(j),to7(j)]=main_calculation_multi(ti1(j),ti2(j),ti3(j),ti4(j),ti5(j),ti6(j));
 
      end
-     parfor j=1:N_axon
-        v(j,i)=to1(j);
-        n(j,i)=to2(j); 
-        m(j,i)=to3(j);
-        h(j,i)=to4(j);
-        I_k(j,i)=to5(j);
-        I_n(j,i)=to6(j);
-        I_L(j,i)=to7(j);
-        I_induct(j+1,i)=to5(j)+to6(j)+to7(j);
+%      parfor j=1:N_axon
+%         v(j,i)=to1(j);
+%         n(j,i)=to2(j); 
+%         m(j,i)=to3(j);
+%         h(j,i)=to4(j);
+%         I_k(j,i)=to5(j);
+%         I_n(j,i)=to6(j);
+%         I_L(j,i)=to7(j);
+%         %I_induct(j+1,i)=to5(j)+to6(j)+to7(j);
+%         if j<N_axon
+%         I_induct(j+1,i)=CF_act*(to1(j)-to1(j+1));
+% %         elseif j=N_axon
+% %             I_induct(j+1,i)=CF_act*(to1(j)-0);
+%         end  
+         parfor j=1:N_axon
+        v(j,i+1)=to1(j);
+        n(j,i+1)=to2(j); 
+        m(j,i+1)=to3(j);
+        h(j,i+1)=to4(j);
+        I_k(j,i+1)=to5(j);
+        I_n(j,i+1)=to6(j);
+        I_L(j,i+1)=to7(j);
+        %I_induct(j+1,i)=to5(j)+to6(j)+to7(j);
+        if j<N_axon
+        I_induct(j+1,i+1)=CF_act*(to1(j)-to1(j+1));
+%         elseif j=N_axon
+%             I_induct(j+1,i)=CF_act*(to1(j)-0);
+        end  
+        
      end
-       % I_induct(j+1,fixed_i)=I_k(j,fixed_i)+I_n(j,fixed_i)+I_L(j,fixed_i);
-       
-    
-%     parfor j=1:N_axon %#ok<*PFUNK>
-%        ti1=n(j,i-1);
-%        ti2=m(j,i-1);
-%        ti3=h(j,i-1);
-%        ti4=dt;
-%        ti5=v(j,i-1);
-%        ti6=I_induct(j,i-1);
-%         
-%         
-%         [to1,to2,to3,to4,to5,to6,to7]=main_calculation_multi(ti1,ti2,ti3,ti4,ti5,ti6);
-%         v(j,i)=to1;
-%         n(j,i)=to2; 
-%         m(j,i)=to3;
-%         h(j,i)=to4;
-%         I_k(j,i)=to5;
-%         I_n(j,i)=to6;
-%         I_L(j,i)=to7;
-%         
-%         I_induct(j+1,i)=I_k(j,i)+I_n(j,i)+I_L(j,i);
-%         
-%         
-%     end
-    
-    
+ 
 
     time_axis=[time_axis, time_axis(i)+dt];    
 
     
-if mod(i,100)==2
+if mod(i,2000)==2
     figure (3)
 
 for j=1:N_axon
