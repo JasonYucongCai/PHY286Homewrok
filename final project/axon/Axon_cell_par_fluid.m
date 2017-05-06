@@ -1,4 +1,5 @@
-%Axon_cell_par(0,0,1,0,1,2,2,0.01,50,1E-15,12);
+
+%Axon_cell_par_fluid(0,0,1,0,  1,2,2,  0.01,50,1E-15,12);
 function [] = Axon_cell_par_fluid(n_in, m_in, h_in,v_input,I_start_time, I_end_time,I_induct_value,dt,tmax,tolerance,N_axon)
 tic;
 
@@ -112,20 +113,36 @@ for i=1:N-1
 % %         elseif j=N_axon
 % %             I_induct(j+1,i)=CF_act*(to1(j)-0);
 %         end  
-         parfor j=1:N_axon
-        v(j,i+1)=to1(j);
-        n(j,i+1)=to2(j); 
-        m(j,i+1)=to3(j);
-        h(j,i+1)=to4(j);
-        I_k(j,i+1)=to5(j);
-        I_n(j,i+1)=to6(j);
-        I_L(j,i+1)=to7(j);
+         %parfor j=1:N_axon
+next_i=i+1;
+      parfor j=1:N_axon
+         v(j,next_i)=to1(j);
+        n(j,next_i)=to2(j); 
+        m(j,next_i)=to3(j);
+        h(j,next_i)=to4(j);
+        I_k(j,next_i)=to5(j);
+        I_n(j,next_i)=to6(j);
+        I_L(j,next_i)=to7(j);
         %I_induct(j+1,i)=to5(j)+to6(j)+to7(j);
         if j<N_axon
-        I_induct(j+1,i+1)=CF_act*(to1(j)-to1(j+1));
+        I_induct(j+1,next_i)=CF_act*(to1(j)-to1(j+1));
 %         elseif j=N_axon
 %             I_induct(j+1,i)=CF_act*(to1(j)-0);
         end  
+%          parfor j=1:N_axon
+%          v(j,i+1)=to1(j);
+%         n(j,i+1)=to2(j); 
+%         m(j,i+1)=to3(j);
+%         h(j,i+1)=to4(j);
+%         I_k(j,i+1)=to5(j);
+%         I_n(j,i+1)=to6(j);
+%         I_L(j,i+1)=to7(j);
+%         %I_induct(j+1,i)=to5(j)+to6(j)+to7(j);
+%         if j<N_axon
+%         I_induct(j+1,i+1)=CF_act*(to1(j)-to1(j+1));
+% %         elseif j=N_axon
+% %             I_induct(j+1,i)=CF_act*(to1(j)-0);
+%         end  
         
      end
  
